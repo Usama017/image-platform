@@ -1,4 +1,19 @@
 services:
+  backend:
+    build:
+      context: ./backend
+    container_name: image-platform-backend
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: imagedb
+      DB_USER: imageuser
+      DB_PASSWORD: imagepass
+    depends_on:
+      - postgres
+
   postgres:
     image: postgres:16
     container_name: image-platform-postgres
@@ -10,6 +25,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./infra/db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   postgres_data:
